@@ -1,0 +1,18 @@
+vim.keymap.set("n", "<leader>fr", "<CMD>Telescope oldfiles<CR>")
+vim.keymap.set("n", "<leader>ff", "<CMD>Telescope find_files<CR>")
+vim.keymap.set("n", "<leader>fb", "<CMD>Telescope file_browser<CR>")
+vim.keymap.set("n", "<leader>fw", "<CMD>Telescope live_grep<CR>")
+vim.keymap.set("n", "<leader>ht", "<CMD>Telescope colorscheme<CR>")
+
+vim.api.nvim_set_keymap('n', '<Leader>sb', [[:lua require'utils'.insert_shebang()<CR>]], { noremap = true, silent = true })
+
+function _G.insert_shebang()
+    local shebang = "#!/usr/bin/env bash\n\nCreated By: Jake@Linux\n" ..
+                    "# Created On: " .. os.date('%c') .. "\n\n# Project: "
+    vim.api.nvim_put({ shebang }, '', true, true)
+end
+
+vim.keymap.set("i", '<C-h>', "<Left>", {})
+vim.keymap.set("i", '<C-l>', "<Right>", {})
+vim.keymap.set("i", '<C-j>', "<DOWN>", {})
+vim.keymap.set("i", '<C-k>', "<UP>", {})
