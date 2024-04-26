@@ -13,7 +13,7 @@ o.number = true
 o.numberwidth = 2
 o.relativenumber = true
 
-o.signcolumn = "yes"
+o.signcolumn = "no"
 o.cursorline = true
 
 o.tabstop = 4
@@ -40,7 +40,9 @@ o.cindent = true
 o.autoindent = true
 
 o.wrap = false
-o.textwidth = 300
+o.textwidth = 170
+o.linebreak = true
+o.breakindent = true
 
 o.softtabstop = -1 -- If negative, shiftwidth value is used
 o.list = true
@@ -49,3 +51,5 @@ o.listchars = "trail:·,nbsp:◇,tab:→ ,extends:▸,precedes:◂"
 o.spelllang = 'en_us'
 o.spell = true
 
+o.undofile = true
+o.undodir = "/home/jake/.local/nvim/undo"

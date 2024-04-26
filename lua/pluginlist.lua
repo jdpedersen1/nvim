@@ -1,5 +1,6 @@
 -- Plugin list for neovim
 
+
 return {
 
     { 'numToStr/Comment.nvim', opts = {} },
@@ -11,7 +12,6 @@ return {
         end
     },
     -- Lua
-
     { 
         'jdpedersen1/poimandres.nvim',
         lazy = false,
@@ -70,6 +70,7 @@ return {
             vim.cmd([[ hi StatusLineNC guibg=NONE ctermbg=NONE ]])
         end,
     },
+
 
 
     "williamboman/mason.nvim",
@@ -219,9 +220,9 @@ return {
 
     {
         'folke/noice.nvim',
-        event = "VeryLazy",
+       event = "VeryLazy",
         opts = {
-            -- options
+          -- options
         },
         dependencies = {
             'MunifTanjim/nui.nvim',
@@ -230,41 +231,52 @@ return {
         }
     },
 
-        {
-            "nvim-neorg/neorg",
-            build = ":Neorg sync-parsers",
-            -- tag = "*",
-            dependencies = { "nvim-lua/plenary.nvim" },
-            config = function()
-                require("neorg").setup {
-                    load = {
-                        ["core.defaults"] = {}, -- Loads default behaviour
-                        ["core.concealer"] = {}, -- Adds pretty icons to your documents
-                        ["core.dirman"] = { -- Manages Neorg workspaces
-                            config = {
-                                workspaces = {
-                                    notes = "~/Documents/school/notes",
-                                    channel = "~/YouTube/notes",
-                                },
-                            },
-                        },
-                    },
-                }
-            end,
+    {'romgrk/barbar.nvim',
+        dependencies = {
+            'lewis6991/gitsigns.nvim', -- OPTIONAL: for git status
+            'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
         },
+        init = function() vim.g.barbar_auto_setup = false end,
+        opts = {
+            -- lazy.nvim will automatically call setup for you. put your options here, anything missing will use the default:
+            -- animation = true,
+            -- insert_at_start = true,
+            -- …etc.
+        },
+        version = '^1.0.0', -- optional: only update when a new 1.x version is released
+    },
 
-  {'romgrk/barbar.nvim',
-    dependencies = {
-      'lewis6991/gitsigns.nvim', -- OPTIONAL: for git status
-      'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
+    {
+        "hrsh7th/nvim-cmp",
+        dependencies = {
+            "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-nvim-lua",
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-path",
+            "hrsh7th/cmp-cmdline",
+            "saadparwaiz1/cmp_luasnip",
+            "L3MON4D3/LuaSnip",
+        },
     },
-    init = function() vim.g.barbar_auto_setup = false end,
-    opts = {
-      -- lazy.nvim will automatically call setup for you. put your options here, anything missing will use the default:
-      -- animation = true,
-      -- insert_at_start = true,
-      -- …etc.
+    {
+        '2kabhishek/tdo.nvim',
+        dependencies =  'nvim-telescope/telescope.nvim',
+        cmd = { 'Tdo', 'TdoEntry', 'TdoNote', 'TdoTodos', 'TdoToggle', 'TdoFind', 'TdoFiles' },
+        keys = { '[t', ']t' },
     },
-    version = '^1.0.0', -- optional: only update when a new 1.x version is released
-  },
+    {
+        "nvim-telescope/telescope-file-browser.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+    },
+
+    {
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v3.x",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+            "MunifTanjim/nui.nvim",
+            -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+        }
+    },
 }
