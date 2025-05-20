@@ -1,13 +1,18 @@
-require("notify").setup({
+-- Ensure nvim-notify is loaded
+require('notify').setup({
     background_colour = "#000000",
-})
-
-local noice = require("noice")
-noice.setup({
-    routes = {
-        {
-            view = "notify",
-            filter = { event = "msg_showmode" },
-        },
+    fps = 30,
+    icons = {
+        DEBUG = "🛠",
+        ERROR = "💥",
+        INFO = "ℹ",
+        TRACE = "✎",
+        WARN = "⚠",
     },
+    level = 2,
+    minimum_width = 50,
+    render = "default",
+    stages = "fade_in_slide_out",
+    timeout = 5000,
+    top_down = true,
 })

@@ -24,3 +24,6 @@ vim.keymap.set("i", '<C-k>', "<UP>", {})
 vim.keymap.set('n', '<leader><space>', ':nohlsearch<CR>', { noremap = true, silent = true })
 -- reload config
 vim.keymap.set('n', '<leader>rs', ':source %<CR>', { noremap = true, silent = true })
+-- Lua (init.lua)
+vim.api.nvim_set_keymap('i', 'sb', [[<Esc>:put = "#!/usr/bin/env bash\<CR>\<CR> Created By: Jake@Linux\<CR>:put=strftime('%c')\<CR># Created On: \<Esc>$ i\<CR>Project: "]], {noremap = true, silent = true})
+

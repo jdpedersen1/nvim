@@ -1,19 +1,19 @@
+-- Set leader key (recommended to set before plugins)
+-- Set leader key
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
+-- Load configurations
 require "options"
 require "plugins"
 require "keys"
 require "backup"
 require "cmpConf"
-require "notifyConf"
-require "header"
+require('jake').setup()
 
-require("lualine").setup({
-  sections = {
-    lualine_x = {
-      {
-        require("noice").api.statusline.mode.get,
-        cond = require("noice").api.statusline.mode.has,
-        color = { fg = "#ff9e64" },
-      }
-    },
-  },
+-- Delay notifyConf until plugins are loaded
+vim.api.nvim_create_autocmd("VimEnter", {
+    callback = function()
+        require "notifyConf"
+    end,
 })

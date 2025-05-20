@@ -1,77 +1,91 @@
                                                                                                                     
-local on_attach = function(_, bufnr)
+-- /home/jake/.config/nvim/after/plugin/lsp.lua
+-- LSP configuration for Neovim
 
-  local bufmap = function(keys, func)
-    vim.keymap.set('n', keys, func, { buffer = bufnr })
-  end
+-- Load required modules
+local lspconfig = require('lspconfig')
+local mason_lspconfig = require('mason-lspconfig')
 
-  bufmap('<leader>r', vim.lsp.buf.rename)
-  bufmap('<leader>a', vim.lsp.buf.code_action)
+-- Setup neodev for enhanced Lua development
+require('neodev').setup {}
 
-  bufmap('gd', vim.lsp.buf.definition)
-  bufmap('gD', vim.lsp.buf.declaration)
-  bufmap('gI', vim.lsp.buf.implementation)
-  bufmap('<leader>D', vim.lsp.buf.type_definition)
+-- Define on_attach function for LSP keybindings and settings
+local on_attach = function(client, bufnr)
+  -- Enable completion triggered by <c-x><c-o>
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  bufmap('gr', require('telescope.builtin').lsp_references)
-  bufmap('<leader>s', require('telescope.builtin').lsp_document_symbols)
-  bufmap('<leader>S', require('telescope.builtin').lsp_dynamic_workspace_symbols)
-
-  bufmap('K', vim.lsp.buf.hover)
-
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
-  end, {})
+  -- Buffer-local keymappings
+  local bufopts = { noremap = true, silent = true, buffer = bufnr }
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 end
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+-- Setup CMP capabilities for autocompletion
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
--- no mason
--- require('lspconfig').lua_ls.setup {
---     on_attach = on_attach,
---     capabilities = capabilities,
---     Lua = {
---       workspace = { checkThirdParty = false },
---       telemetry = { enable = false },
---     },
--- }
-
--- mason
-require("mason").setup()
-require("mason-lspconfig").setup_handlers({
-
+-- Configure mason-lspconfig to manage LSP servers
+mason_lspconfig.setup {
+  -- List of servers to ensure are installed
+  ensure_installed = {
+    'pyright',    -- Python
+    -- 'tsserver',   -- TypeScript/JavaScript
+    'lua_ls',     -- Lua
+    -- 'jdtls',      -- Java
+    'bashls',     -- Bash
+    'dockerls',   -- Dockerfile
+    'jsonls',     -- JSON
+    'terraformls', -- Terraform
+    'gopls',      -- Go
+    'elixirls',   -- Elixir
+    -- 'erlangls',   -- Erlang
+  },
+  -- Handlers for automatic server setup
+  handlers = {
+    -- Default handler for most servers
     function(server_name)
-        require("lspconfig")[server_name].setup {
-            on_attach = on_attach,
-            capabilities = capabilities
-        }
+      lspconfig[server_name].setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+      }
     end,
-
-    ["lua_ls"] = function()
-        require('neodev').setup()
-        require('lspconfig').lua_ls.setup {
-            on_attach = on_attach,
-            capabilities = capabilities,
-            settings = {
-                Lua = {
-                    workspace = { checkThirdParty = false },
-                    telemetry = { enable = false },
-                },
-            }
-        }
-    end
-
-    -- another example
-    -- ["omnisharp"] = function()
-    --     require('lspconfig').omnisharp.setup {
-    --         filetypes = { "cs", "vb" },
-    --         root_dir = require('lspconfig').util.root_pattern("*.csproj", "*.sln"),
-    --         on_attach = on_attach,
-    --         capabilities = capabilities,
-    --         enable_roslyn_analyzers = true,
-    --         analyze_open_documents_only = true,
-    --         enable_import_completion = true,
-    --     }
-    -- end,
-})
+    -- Custom handler for lua_ls
+    ['lua_ls'] = function()
+      lspconfig.lua_ls.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = { 'vim' }, -- Recognize vim global
+            },
+            workspace = {
+              library = vim.api.nvim_get_runtime_file('', true), -- Include Neovim runtime
+            },
+            telemetry = { enable = false },
+          },
+        },
+      }
+    end,
+    -- Custom handler for jdtls (Java)
+    ['jdtls'] = function()
+      lspconfig.jdtls.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        -- Additional settings for nvim-java if needed
+        settings = {
+          java = {
+            signatureHelp = { enabled = true },
+            contentProvider = { preferred = 'fernflower' },
+          },
+        },
+      }
+    end,
+  },
+}

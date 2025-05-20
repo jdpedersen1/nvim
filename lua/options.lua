@@ -53,3 +53,5 @@ o.spell = true
 
 o.undofile = true
 o.undodir = "/home/jake/.local/nvim/undo"
+
+o.swapfile = false

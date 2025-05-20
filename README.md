@@ -21,3 +21,4 @@ Palettes have been slightly modified to match my personal colorscheme, just unti
 * Poimandres
 * Rams
 * Monochrome
+* Jake (custom theme, currently set)
